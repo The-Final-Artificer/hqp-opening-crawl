@@ -1,0 +1,234 @@
+<form autocomplete="off">
+
+  {{!-- Library bar --}}
+  <div class="hqp-topbar">
+    <select name="librarySelect">
+      <option value="">{{localize "HQP.Crawl.NewCrawl"}}</option>
+      {{#each library}}
+      <option value="{{this.id}}" {{#if (eq this.id ../selectedId)}}selected{{/if}}>{{this.name}}</option>
+      {{/each}}
+    </select>
+    <button type="button" data-action="deleteCrawl" title="{{localize 'HQP.Crawl.Delete'}}" {{#unless selectedId}}disabled{{/unless}}>
+      <i class="fas fa-trash"></i>
+    </button>
+  </div>
+
+  <div class="hqp-columns">
+
+    {{!-- LEFT: Content --}}
+    <div class="hqp-col-left">
+      <div class="hqp-card">
+        <div class="hqp-card-header">
+          <i class="fas fa-scroll"></i> Content
+        </div>
+
+        <div class="hqp-row">
+          <label class="hqp-checkbox">
+            <input type="checkbox" name="showIntro" {{#if showIntro}}checked{{/if}}>
+            Show intro text
+          </label>
+        </div>
+
+        <div class="hqp-field">
+          <div class="hqp-field-row">
+            <input type="text" name="introText" value="{{introText}}" placeholder="A long time ago, in a galaxy far, far away....">
+            <select name="introFont" class="hqp-font-select" data-preview=".hqp-title-preview-stage .hqp-intro">
+              {{#each fonts}}<option value="{{this}}" {{#if (eq this ../introFont)}}selected{{/if}}>{{this}}</option>{{/each}}
+            </select>
+            <input type="color" name="introColor" value="{{introColor}}" title="Intro color">
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Campaign Title</label>
+          <div class="hqp-field-row">
+            <input type="text" name="campaignTitle" value="{{campaignTitle}}" placeholder="STAR WARS">
+            <select name="campaignTitleFont" class="hqp-font-select" data-preview=".hqp-title-preview-stage .hqp-campaign-title">
+              {{#each fonts}}<option value="{{this}}" {{#if (eq this ../campaignTitleFont)}}selected{{/if}}>{{this}}</option>{{/each}}
+            </select>
+            <input type="color" name="campaignTitleColor" value="{{campaignTitleColor}}" title="Campaign title color">
+          </div>
+        </div>
+
+        <div class="hqp-separator"></div>
+
+        <div class="hqp-field">
+          <label>Episode Title</label>
+          <div class="hqp-field-row">
+            <input type="text" name="title" value="{{title}}" placeholder="EPISODE IV">
+            <select name="titleFont" class="hqp-font-select" data-preview=".hqp-crawl-preview-stage .hqp-crawl-title">
+              {{#each fonts}}<option value="{{this}}" {{#if (eq this ../titleFont)}}selected{{/if}}>{{this}}</option>{{/each}}
+            </select>
+            <input type="color" name="titleColor" value="{{titleColor}}" title="Title color">
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Subtitle</label>
+          <div class="hqp-field-row">
+            <input type="text" name="subtitle" value="{{subtitle}}" placeholder="A New Hope">
+            <select name="subtitleFont" class="hqp-font-select" data-preview=".hqp-crawl-preview-stage .hqp-crawl-subtitle">
+              {{#each fonts}}<option value="{{this}}" {{#if (eq this ../subtitleFont)}}selected{{/if}}>{{this}}</option>{{/each}}
+            </select>
+            <input type="color" name="subtitleColor" value="{{subtitleColor}}" title="Subtitle color">
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Crawl Text</label>
+          <textarea name="body" placeholder="It is a period of civil war. Rebel spaceships, striking from a hidden base...">{{body}}</textarea>
+        </div>
+
+        <div class="hqp-field">
+          <div class="hqp-field-row">
+            <label style="margin:0;">Text Color & Font</label>
+            <select name="bodyFont" class="hqp-font-select" data-preview=".hqp-crawl-preview-stage .hqp-crawl-body">
+              {{#each fonts}}<option value="{{this}}" {{#if (eq this ../bodyFont)}}selected{{/if}}>{{this}}</option>{{/each}}
+            </select>
+            <input type="color" name="color" value="{{color}}">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{!-- MIDDLE: Settings + Actions --}}
+    <div class="hqp-col-mid">
+
+      <div class="hqp-card">
+        <div class="hqp-card-header">
+          <i class="fas fa-sliders-h"></i> Settings
+        </div>
+
+        <div class="hqp-field">
+          <label>Background</label>
+          <div class="hqp-field-row">
+            <input type="text" name="backgroundImage" value="{{backgroundImage}}" placeholder="None">
+            <button type="button" class="hqp-icon-btn" data-action="pickBackground" tabindex="-1">
+              <i class="fas fa-folder-open"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="hqp-row">
+          <label class="hqp-checkbox">
+            <input type="checkbox" name="showStars" {{#if showStars}}checked{{/if}}>
+            Star field background
+          </label>
+        </div>
+
+        <div class="hqp-field">
+          <label>Scroll Duration</label>
+          <div class="hqp-slider-row">
+            <input type="range" name="speed" min="20" max="180" value="{{speed}}" step="5">
+            <span class="hqp-slider-val hqp-speed-value">{{speed}}s</span>
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Tilt Angle</label>
+          <div class="hqp-slider-row">
+            <input type="range" name="angle" min="0" max="60" value="{{angle}}" step="1">
+            <span class="hqp-slider-val hqp-angle-value">{{angle}}°</span>
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Text Size</label>
+          <div class="hqp-slider-row">
+            <input type="range" name="textScale" min="50" max="200" value="{{textScale}}" step="5">
+            <span class="hqp-slider-val hqp-textscale-value">{{textScale}}%</span>
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Campaign Title Size</label>
+          <div class="hqp-slider-row">
+            <input type="range" name="campaignScale" min="50" max="250" value="{{campaignScale}}" step="5">
+            <span class="hqp-slider-val hqp-campaignscale-value">{{campaignScale}}%</span>
+          </div>
+        </div>
+
+        <div class="hqp-separator"></div>
+
+        <div class="hqp-field">
+          <label>Music Track</label>
+          <div class="hqp-field-row">
+            <input type="text" name="music" value="{{music}}" placeholder="None">
+            <button type="button" class="hqp-icon-btn" data-action="pickMusic" tabindex="-1">
+              <i class="fas fa-folder-open"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="hqp-field">
+          <label>Volume</label>
+          <div class="hqp-slider-row">
+            <input type="range" name="volume" min="0" max="1" value="{{volume}}" step="0.05">
+            <span class="hqp-slider-val hqp-volume-value">{{volumePercent}}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hqp-card hqp-card-actions">
+        <div class="hqp-field">
+          <input type="text" name="saveName" value="{{saveName}}" placeholder="Save as...">
+        </div>
+        <div class="hqp-actions">
+          <button type="button" data-action="saveCrawl" class="hqp-btn hqp-btn-secondary">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <button type="button" data-action="previewCrawl" class="hqp-btn hqp-btn-secondary">
+            <i class="fas fa-eye"></i> Preview
+          </button>
+          <button type="button" data-action="playForAll" class="hqp-btn hqp-btn-primary">
+            <i class="fas fa-play"></i> Play for All
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {{!-- RIGHT: Live Preview, two stacked panes --}}
+    <div class="hqp-col-right">
+
+      {{!-- Intro + campaign title (small mini-preview on top) --}}
+      <div class="hqp-card hqp-title-preview-card">
+        <div class="hqp-card-header">
+          <i class="fas fa-star"></i> Intro & Campaign Title
+        </div>
+        <div class="hqp-title-preview-pane">
+          <div class="hqp-title-preview-stage">
+            <div class="hqp-title-preview-stage-inner">
+              <div class="hqp-crawl-wrapper hqp-title-wrapper">
+                <div class="hqp-intro" style="color: {{introColor}}; {{introFontStyle}} {{#unless introText}}display:none;{{/unless}}">{{introText}}</div>
+                <div class="hqp-campaign-title" style="color: {{campaignTitleColor}}; {{campaignTitleFontStyle}} font-size: {{campaignFontSize}}%; {{#unless campaignTitle}}display:none;{{/unless}}">{{campaignTitle}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{!-- Crawl text (main preview, grows with body length, shrinks with tilt) --}}
+      <div class="hqp-card hqp-preview-card">
+        <div class="hqp-card-header">
+          <i class="fas fa-tv"></i> Crawl Text
+        </div>
+        <div class="hqp-preview-pane">
+          <div class="hqp-crawl-preview-stage">
+            <div class="hqp-crawl-preview-stage-inner">
+              <div class="hqp-crawl-wrapper">
+                <div class="hqp-crawl-viewport" style="transform: perspective(325px) rotateX({{angle}}deg); font-size: {{viewportFontSize}}%; width: {{viewportWidth}}em; margin-left: -{{viewportMargin}}em;">
+                  <div class="hqp-crawl-content" style="color: {{color}};">
+                    <h1 class="hqp-crawl-title" style="color: {{titleColor}}; {{titleFontStyle}} {{#unless title}}display:none;{{/unless}}">{{title}}</h1>
+                    <h2 class="hqp-crawl-subtitle" style="color: {{subtitleColor}}; {{subtitleFontStyle}} {{#unless subtitle}}display:none;{{/unless}}">{{subtitle}}</h2>
+                    <div class="hqp-crawl-body" style="{{bodyFontStyle}} {{#unless body}}display:none;{{/unless}}">{{{bodyHtml}}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

@@ -1,0 +1,564 @@
+/* ========================================
+   Opening Crawl Overlay
+   ======================================== */
+
+#hqp-crawl-overlay {
+  position: fixed !important;
+  inset: 0;
+  z-index: 99999;
+  background: #000;
+  overflow: hidden;
+}
+
+.hqp-crawl-wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Random stars (generated via JS) */
+.hqp-star {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background-color: white;
+}
+
+.hqp-crawl-starfield {
+  display: none;
+}
+
+/* Intro text: fades in, holds, fades out */
+.hqp-intro {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+  font-size: 250%;
+  font-weight: 400;
+  text-align: center;
+  white-space: pre-line;
+  opacity: 0;
+  animation: hqp-intro-fade 6s ease-out forwards;
+}
+
+@keyframes hqp-intro-fade {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Campaign title: scales down and fades like the STAR WARS logo */
+.hqp-campaign-title {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 5;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+  font-size: 600%;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: hqp-campaign-zoom 6s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+}
+
+@keyframes hqp-campaign-zoom {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(2.75); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.05); }
+}
+
+/*
+ * The viewport is the tilted "window" sitting at the bottom of the
+ * screen. Perspective + rotateX on this container (NOT the content)
+ * means everything inside it lives on a tilted plane. The content
+ * scrolls via simple top animation inside this tilted box.
+ */
+.hqp-crawl-viewport {
+  font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+  transform: perspective(325px) rotateX(27deg);
+  transform-origin: 50% 100%;
+  text-align: justify;
+  position: absolute;
+  margin-left: -9em;
+  font-weight: bold;
+  overflow: hidden;
+  font-size: 420%;
+  height: 50em;
+  width: 18em;
+  bottom: 0;
+  left: 50%;
+  color: #FFFF82;
+  word-spacing: 0.2em;
+}
+
+.hqp-crawl-viewport {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 45%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 45%);
+}
+
+.hqp-crawl-fade {
+  display: none;
+}
+
+.hqp-crawl-content {
+  position: absolute;
+  top: 100%;
+  animation: hqp-crawl-scroll linear forwards;
+}
+
+@keyframes hqp-crawl-scroll {
+  0% {
+    top: 100%;
+  }
+  100% {
+    top: -170%;
+  }
+}
+
+.hqp-crawl-title {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+}
+
+.hqp-crawl-subtitle {
+  font-size: 1.75em;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5em;
+}
+
+.hqp-crawl-body p {
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+
+.hqp-crawl-body p:first-child {
+  margin-top: 0;
+}
+
+/* GM stop button */
+.hqp-crawl-stop-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  z-index: 3;
+  padding: 8px 18px;
+  background: rgba(40, 40, 40, 0.8);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.hqp-crawl-stop-btn:hover {
+  background: rgba(80, 20, 20, 0.9);
+}
+
+/* ========================================
+   Crawl Editor
+   ======================================== */
+
+#hqp-crawl-editor {
+  min-width: 1200px;
+  max-height: 100vh;
+}
+
+#hqp-crawl-editor .window-content {
+  overflow-y: auto;
+  padding: 10px 12px;
+  background: var(--color-bg, #1a1a2e);
+}
+
+/* ---- Top bar ---- */
+#hqp-crawl-editor .hqp-topbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#hqp-crawl-editor .hqp-topbar select {
+  flex: 1;
+}
+
+/* ---- Three-column layout ---- */
+#hqp-crawl-editor .hqp-columns {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+#hqp-crawl-editor .hqp-col-left {
+  flex: 1;
+  min-width: 0;
+}
+
+#hqp-crawl-editor .hqp-col-mid {
+  flex: 0.85;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#hqp-crawl-editor .hqp-col-right {
+  flex: 2;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Cards ---- */
+#hqp-crawl-editor .hqp-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+#hqp-crawl-editor .hqp-card-header {
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#hqp-crawl-editor .hqp-card-header i {
+  font-size: 0.95em;
+}
+
+/* ---- Fields ---- */
+#hqp-crawl-editor .hqp-field {
+  margin-bottom: 7px;
+}
+
+#hqp-crawl-editor .hqp-field label {
+  display: block;
+  font-size: 0.78em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 3px;
+}
+
+#hqp-crawl-editor .hqp-field-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+#hqp-crawl-editor .hqp-field-row input[type="text"] {
+  flex: 1;
+}
+
+#hqp-crawl-editor .hqp-row {
+  margin-bottom: 7px;
+}
+
+/* Inputs */
+#hqp-crawl-editor input[type="text"],
+#hqp-crawl-editor textarea,
+#hqp-crawl-editor select {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: inherit;
+  padding: 5px 8px;
+  font-size: 0.88em;
+  transition: border-color 0.15s;
+}
+
+#hqp-crawl-editor input[type="text"]:focus,
+#hqp-crawl-editor textarea:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+#hqp-crawl-editor textarea {
+  min-height: 90px;
+  resize: vertical;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Checkbox */
+#hqp-crawl-editor .hqp-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84em;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+/* Font selects */
+#hqp-crawl-editor .hqp-font-select {
+  width: 130px;
+  min-width: 130px;
+  flex-shrink: 0;
+  font-size: 0.82em !important;
+  padding: 3px 4px !important;
+}
+
+#hqp-crawl-editor .hqp-font-select option {
+  font-size: 14px;
+  padding: 2px 4px;
+}
+
+/* Color pickers */
+#hqp-crawl-editor input[type="color"] {
+  width: 30px;
+  min-width: 30px;
+  height: 28px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+/* Icon buttons (file pickers) */
+#hqp-crawl-editor .hqp-icon-btn {
+  width: 30px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 0.8em;
+  transition: background 0.15s;
+}
+
+#hqp-crawl-editor .hqp-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Separator */
+#hqp-crawl-editor .hqp-separator {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin: 8px 0;
+}
+
+/* ---- Sliders ---- */
+#hqp-crawl-editor .hqp-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#hqp-crawl-editor .hqp-slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #7c6fef;
+}
+
+#hqp-crawl-editor .hqp-slider-val {
+  min-width: 34px;
+  text-align: right;
+  font-size: 0.8em;
+  color: rgba(255, 255, 255, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Actions card ---- */
+#hqp-crawl-editor .hqp-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#hqp-crawl-editor .hqp-card-actions .hqp-field {
+  margin-bottom: 0;
+}
+
+#hqp-crawl-editor .hqp-actions {
+  display: flex;
+  gap: 6px;
+}
+
+#hqp-crawl-editor .hqp-btn {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: 0.82em;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background 0.15s, transform 0.1s;
+}
+
+#hqp-crawl-editor .hqp-btn:active {
+  transform: scale(0.97);
+}
+
+#hqp-crawl-editor .hqp-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#hqp-crawl-editor .hqp-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+#hqp-crawl-editor .hqp-btn-primary {
+  background: linear-gradient(135deg, #5a4fcf, #7c6fef);
+  color: #fff;
+}
+
+#hqp-crawl-editor .hqp-btn-primary:hover {
+  background: linear-gradient(135deg, #6a5fd8, #8b7ff5);
+}
+
+/* ---- Preview pane ---- */
+#hqp-crawl-editor .hqp-preview-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#hqp-crawl-editor .hqp-preview-pane {
+  flex: 1;
+  position: relative;
+  background: #000;
+  border-radius: 6px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+
+/* Miniature stage: a 1280x720 reference frame containing the exact same
+   HTML/CSS as the real crawl overlay. JS applies transform: scale() to fit
+   the pane, which guarantees pixel-perfect parity with playback. */
+/* Stage sits in normal flow so its explicit height feeds the pane's
+   scrollHeight, which is what enables the vertical scrollbar. */
+#hqp-crawl-editor .hqp-crawl-preview-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+#hqp-crawl-editor .hqp-crawl-preview-stage-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 720px;
+  transform-origin: top left;
+  /* Pin the root font-size so em math inside the stage is stable regardless
+     of host font-size. Matches a 16px root, a standard desktop browser. */
+  font-size: 16px;
+  /* Clip at the logical 1280x720 frame so content (especially body that
+     flows past viewport bottom) never leaks into the empty pane area
+     below or to the sides. */
+  overflow: hidden;
+  /* transform: scale() set inline */
+}
+
+/* Wrapper and viewport intentionally use their native styling so the
+   preview geometry is byte-for-byte identical to the real overlay:
+   50em-tall viewport anchored bottom:0, mask gradient intact, overflow
+   hidden. The only difference is that JS pins the content to a static
+   position instead of animating it. */
+
+/* Intro + campaign title preview: a small static pane above the main
+   crawl preview. Uses the same 1280-wide reference frame so font sizing
+   matches the real overlay, scaled down by JS to fit the pane width. */
+#hqp-crawl-editor .hqp-title-preview-card {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+
+#hqp-crawl-editor .hqp-title-preview-pane {
+  position: relative;
+  background: #000;
+  border-radius: 6px;
+  overflow: hidden;
+  font-family: 'Century Gothic', CenturyGothic, AppleGothic, sans-serif;
+}
+
+#hqp-crawl-editor .hqp-title-preview-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+#hqp-crawl-editor .hqp-title-preview-stage-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1280px;
+  height: 420px;
+  transform-origin: top left;
+  font-size: 16px;
+}
+
+/* Intro and campaign both visible, with enough room between them that
+   they don't overlap. In the real crawl the intro fades before the
+   campaign zooms, so they never coexist visually, but this preview is
+   static, so we space them apart. */
+#hqp-crawl-editor .hqp-title-preview-stage .hqp-intro {
+  top: 27%;
+  opacity: 1;
+  animation: none;
+}
+
+#hqp-crawl-editor .hqp-title-preview-stage .hqp-campaign-title {
+  top: 70%;
+  opacity: 1;
+  animation: none;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Preview viewport: strip the animation-era scaffolding from the real
+   overlay. No 50em-tall scroll runway, no fade mask, no bottom-anchored
+   absolute content. Just a top-anchored box that auto-sizes to the text
+   and tilts around its bottom edge so the perspective matches playback. */
+#hqp-crawl-editor .hqp-crawl-preview-stage .hqp-crawl-viewport {
+  top: auto;
+  bottom: 0;
+  height: auto;
+  overflow: visible;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+#hqp-crawl-editor .hqp-crawl-preview-stage .hqp-crawl-content {
+  position: static;
+  top: auto;
+  bottom: auto;
+  animation: none;
+}
+
+#hqp-crawl-editor .hqp-pv-star {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: #fff;
+  pointer-events: none;
+}
+

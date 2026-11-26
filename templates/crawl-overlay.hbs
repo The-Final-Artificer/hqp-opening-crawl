@@ -1,0 +1,31 @@
+<div class="hqp-crawl-wrapper" {{#if backgroundImage}}style="background-image: url('{{backgroundImage}}'); background-size: cover; background-position: center;"{{/if}}>
+  {{#if showIntro}}
+  <div class="hqp-intro" style="color: {{introColor}}; {{introFontStyle}} animation-delay: {{introDelay}}s;">
+    {{introText}}
+  </div>
+  {{/if}}
+  {{#if campaignTitle}}
+  <div class="hqp-campaign-title" style="color: {{campaignTitleColor}}; {{campaignTitleFontStyle}} font-size: {{campaignFontSize}}%; animation-delay: {{campaignDelay}}s;">
+    {{campaignTitle}}
+  </div>
+  {{/if}}
+  <div class="hqp-crawl-fade"></div>
+  <div class="hqp-crawl-viewport" style="transform: perspective(325px) rotateX({{angle}}deg); font-size: {{viewportFontSize}}%; width: {{viewportWidth}}em; margin-left: -{{viewportMargin}}em;">
+    <div class="hqp-crawl-content" style="animation-duration: {{speed}}s; animation-delay: {{crawlDelay}}s; color: {{color}};">
+      {{#if title}}
+      <h1 class="hqp-crawl-title" style="color: {{titleColor}}; {{titleFontStyle}}">{{title}}</h1>
+      {{/if}}
+      {{#if subtitle}}
+      <h2 class="hqp-crawl-subtitle" style="color: {{subtitleColor}}; {{subtitleFontStyle}}">{{subtitle}}</h2>
+      {{/if}}
+      {{#if body}}
+      <div class="hqp-crawl-body" style="{{bodyFontStyle}}">{{{bodyHtml}}}</div>
+      {{/if}}
+    </div>
+  </div>
+  {{#if showStop}}
+  <button class="hqp-crawl-stop-btn" data-action="stopCrawl">
+    <i class="fas fa-stop"></i> {{localize "HQP.Crawl.Stop"}}
+  </button>
+  {{/if}}
+</div>
